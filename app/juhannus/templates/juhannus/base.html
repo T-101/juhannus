@@ -1,0 +1,26 @@
+<!DOCTYPE html>{% load static %}
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <title>#suomiscene | Juhannusveikkaus</title>
+    <link rel="stylesheet" href="{% static 'juhannus/style.css' %}">
+</head>
+<body>
+<div class="row">
+    <div class="col">
+        Vuodet:
+        {% for event in events %}
+            <a href="{% url 'juhannus:event-detail' event.year %}">{{ event.year }}</a>
+        {% endfor %}
+    </div>
+    <div class="col pull-right">
+        <a href="https://github.com/T-101">Github</a>
+    </div>
+</div>
+{% block content %}
+{% endblock %}
+
+{% block htmlform %}
+{% endblock %}
+</body>
+</html>

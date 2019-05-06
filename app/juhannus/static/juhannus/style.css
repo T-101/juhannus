@@ -1,0 +1,34 @@
+.winner {
+    font-weight: bolder;
+}
+
+body {
+    font-family: monospace;
+    margin-left: 20px;
+}
+
+input {
+    font-family: monospace;
+}
+
+.tcolumn {
+    text-align: center;
+    padding: 5px 20px 5px 20px;
+}
+
+.formwrapper {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.row {
+    display: flex; /* equal height of the children */
+}
+
+.col {
+    flex: 1; /* additionally, equal width */
+}
+
+.pull-right {
+    text-align: right;
+}

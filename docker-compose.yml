@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  juhannus:
+    build: .
+    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    container_name: juhannus
+    volumes:
+      - .:/juhannus
+    ports:
+      - "8000:8000"

@@ -1,0 +1,86 @@
+{% extends 'juhannus/base.html' %}
+{% block content %}
+
+    <pre>{{ event.get_header_text }}</pre>
+
+    <pre>{{ event.get_body_text|safe }}</pre>
+
+    {% if event.get_participants %}
+        <table>
+            <tr>
+                {% if ascending %}
+                    <th><a href="?sort=-name">name</a></th>
+                    <th><a href="?sort=-vote">vote</a></th>
+                {% else %}
+                    <th><a href="?sort=name">name</a></th>
+                    <th><a href="?sort=vote">vote</a></th>
+                {% endif %}
+            </tr>
+            {% if request.user.is_superuser %}
+                {% for participant in participants %}
+                    <form method="POST">{% csrf_token %}
+                        <input type="hidden" name="event" required id="id_event" value="{{ event.pk }}">
+                        <input type="hidden" name="pk" value="{{ participant.pk }}">
+                        <tr>
+                            <td class="tcolumn">
+                                <input type="text" name="name" placeholder=" Handle" autocomplete="off"
+                                       maxlength="32" required id="id_name"
+                                       value="{{ participant.name }}">
+                            </td>
+                            <td class="tcolumn">
+                                <input type="number" name="vote" placeholder=" Vote" autocomplete="off" min="0"
+                                       max="100" required id="id_vote" value="{{ participant.vote }}">
+                            </td>
+                            <td class="tcolumn">
+                                <input type="submit" name="action" value="modify">
+                            </td>
+                            <td class="tcolumn">
+                                <input type="submit" name="action" value="delete">
+                            </td>
+                            <td>{{ participant.created }}</td>
+                        </tr>
+                    </form>
+                {% endfor %}
+            {% else %}
+                {% for participant in participants %}
+                    <tr class="{% if event.result == participant.vote %}winner{% endif %}">
+                        <td class="tcolumn">
+                            {{ participant.name }}
+                        </td>
+                        <td class="tcolumn">
+                            {{ participant.vote }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </table>
+        <p>
+            <code>
+                Osallistujia: {{ event.get_participants|length }}
+            </code>
+        </p>
+    {% endif %}
+    {% if event.is_voting_available %}
+        <form method="post">{% csrf_token %}
+            {{ form.name }}
+            {{ form.name.errors }}
+            {{ form.vote }}
+            {{ form.vote.errors }}
+            <input type="hidden" name="event" required id="id_event" value="{{ event.pk }}">
+            <button type="submit" name="action" value="save">Aeaenestae</button>
+        </form>
+    {% endif %}
+
+    {% if event.result %}
+        <p>
+            <code>
+                {% if event.is_final %}
+                    Virallinen tulos: {{ event.result }}
+                {% else %}
+                    Epävirallinen tulos: {{ event.result }} (Odottaa varmistusta)
+                {% endif %}
+            </code>
+        </p>
+    {% endif %}
+
+{% endblock %}
