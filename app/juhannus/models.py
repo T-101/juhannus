@@ -104,10 +104,5 @@ class Participant(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     visible = models.BooleanField(default=True)
 
-    def save(self, *args, **kwargs):
-        # Fail silently when trying to save after voting deadline
-        if self.event.is_voting_available():
-            return super().save(*args, **kwargs)
-
     def __str__(self):
         return self.name
