@@ -9,11 +9,11 @@
         <table>
             <tr>
                 {% if ascending %}
-                    <th><a href="?sort=-name">name</a></th>
-                    <th><a href="?sort=-vote">vote</a></th>
+                    <th><a href="?name=desc">name</a></th>
+                    <th><a href="?vote=desc">vote</a></th>
                 {% else %}
-                    <th><a href="?sort=name">name</a></th>
-                    <th><a href="?sort=vote">vote</a></th>
+                    <th><a href="?name=asc">name</a></th>
+                    <th><a href="?vote=asc">vote</a></th>
                 {% endif %}
             </tr>
             {% if request.user.is_superuser %}
