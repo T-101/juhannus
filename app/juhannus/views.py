@@ -1,4 +1,6 @@
 import re
+
+from django.db.models.functions import Lower
 from django.shortcuts import get_object_or_404
 from django.views import generic
 
@@ -17,15 +19,19 @@ class EventView(generic.FormView):
         ctx = super().get_context_data(**kwargs)
         ctx["events"] = list(Event.objects.order_by("year").values("year"))
 
-        sort_order = self.request.GET.get("sort") or "name"
-        sort_order = sort_order if sort_order in ['name', '-name', 'vote', '-vote'] else "name"
-        ctx["ascending"] = not bool(re.search("^-", sort_order))
+        sort_order = "vote" if self.request.GET.get("vote") else "name"
 
         if not self.kwargs.get("year"):
             ctx['event'] = Event.objects.order_by("year").last()
         else:
             ctx['event'] = get_object_or_404(Event, year=self.kwargs.get("year"))
-        ctx["participants"] = ctx["event"].participants.order_by(sort_order)
+
+        ctx["participants"] = ctx["event"].participants.order_by(Lower(sort_order))
+
+        ctx["ascending"] = False if self.request.GET.get(sort_order, "").lower() == "desc" else True
+
+        if not ctx["ascending"]:
+            ctx["participants"] = ctx["participants"].reverse()
         return ctx
 
     def form_valid(self, form):
