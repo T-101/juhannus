@@ -37,16 +37,17 @@ class EventView(generic.FormView):
     def form_valid(self, form):
         print("FORM VALID", form.data.get("action"))
         action = form.data.get("action")
-        if action == "modify":
+        if action == "modify" and self.request.user.is_staff:
             instance = get_object_or_404(Participant, pk=form.data.get("pk"))
             vote = SubmitForm(self.request.POST, instance=instance)
             vote.save()
-        if action == "delete":
+        if action == "delete" and self.request.user.is_staff:
             instance = get_object_or_404(Participant, pk=form.data.get("pk"))
             instance.delete()
         if action == "save":
             vote = form.save(commit=False)
-            vote.save()
+            if vote.event.is_voting_available() or self.request.user.is_staff:
+                vote.save()
         return super().form_valid(form)
 
     def form_invalid(self, form):
