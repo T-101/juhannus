@@ -6,12 +6,13 @@ from juhannus.models import Participant
 class SubmitForm(forms.ModelForm):
 
     def clean(self):
-        if self.data.get("action") == "delete":
+        action = self.data.get("action")
+        if action == "delete":
             return self.cleaned_data
 
         name = self.cleaned_data.get("name")
         event = self.cleaned_data.get("event")
-        if event.get_participants().filter(name__iexact=name.strip()):
+        if event.get_participants().filter(name__iexact=name.strip()) and action != "modify":
             raise forms.ValidationError({"name": "Name already in use. Choose another"})
 
     class Meta:
