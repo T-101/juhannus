@@ -4,7 +4,7 @@ import datetime
 
 from string import Template
 
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
@@ -99,7 +99,10 @@ class Participant(models.Model):
                             )]
                             )
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='participants')
-    vote = models.PositiveIntegerField()
+    vote = models.PositiveIntegerField(validators=[
+        MaxValueValidator(100),
+        MinValueValidator(0)
+    ])
 
     created = models.DateTimeField(auto_now_add=True)
     visible = models.BooleanField(default=True)
