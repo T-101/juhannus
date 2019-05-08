@@ -41,7 +41,7 @@ class EventView(generic.FormView):
         return ctx
 
     def form_valid(self, form):
-        print("FORM VALID", form.data.get("action"))
+        # print("FORM VALID", form.data.get("action"))
         action = form.data.get("action")
         if action == "modify" and self.request.user.is_staff:
             instance = get_object_or_404(Participant, pk=form.data.get("pk"))
@@ -57,5 +57,5 @@ class EventView(generic.FormView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        print("FORM INVALID")
+        # print("FORM INVALID", form.errors)
         return super().form_invalid(form)
