@@ -1,6 +1,7 @@
 import re
 
 from django.db.models.functions import Lower
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views import generic
 
@@ -11,6 +12,11 @@ from juhannus.forms import SubmitForm
 class EventView(generic.FormView):
     template_name = 'juhannus/index.html'
     form_class = SubmitForm
+
+    def dispatch(self, request, *args, **kwargs):
+        if not Event.objects.count():
+            return HttpResponse("No event in db")
+        return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         return self.request.get_full_path()
