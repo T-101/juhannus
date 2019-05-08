@@ -18,6 +18,11 @@ class ModelsTests(TestCase):
                                                       name="Asset 463 / Groovy ^ Pier",
                                                       vote=6)
 
+    def tearDown(self):
+        del self.midsummer2018
+        del self.midsummer2020
+        del self.participant
+
     def test_model_create(self):
         event = self.midsummer2018
         self.assertEqual(event.get_header_text(), "Midsummer 2018")

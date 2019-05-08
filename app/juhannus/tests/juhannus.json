@@ -1,0 +1,67 @@
+[
+  {
+    "model": "juhannus.header",
+    "pk": 1,
+    "fields": {
+      "title": "2018",
+      "text": "Midsummer 2018"
+    }
+  },
+  {
+    "model": "juhannus.header",
+    "pk": 2,
+    "fields": {
+      "title": "2020",
+      "text": "Midsummer 2020"
+    }
+  },
+  {
+    "model": "juhannus.body",
+    "pk": 1,
+    "fields": {
+      "title": "2018",
+      "text": "$year $year_spaced"
+    }
+  },
+  {
+    "model": "juhannus.body",
+    "pk": 2,
+    "fields": {
+      "title": "2020",
+      "text": "$year $year_spaced"
+    }
+  },
+  {
+    "model": "juhannus.event",
+    "pk": 1,
+    "fields": {
+      "year": 2018,
+      "header": 1,
+      "body": 1,
+      "result": null,
+      "is_final": false
+    }
+  },
+  {
+    "model": "juhannus.event",
+    "pk": 2,
+    "fields": {
+      "year": 2020,
+      "header": 2,
+      "body": 2,
+      "result": null,
+      "is_final": false
+    }
+  },
+  {
+    "model": "juhannus.participant",
+    "pk": 1,
+    "fields": {
+      "name": "Asset 463 / Groovy ^ Pier",
+      "event": 1,
+      "vote": 6,
+      "created": "2019-05-08T14:33:57.687Z",
+      "visible": true
+    }
+  }
+]
