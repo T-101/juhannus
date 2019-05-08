@@ -14,7 +14,7 @@ class EventView(generic.FormView):
     form_class = SubmitForm
 
     def dispatch(self, request, *args, **kwargs):
-        if not Event.objects.count():
+        if not Event.objects.exists():
             return HttpResponse("No event in db")
         return super().dispatch(request, *args, **kwargs)
 
