@@ -10,6 +10,14 @@ from django.conf import settings
 from django.utils import timezone
 
 
+def get_midsummer_saturday(year):
+    # Midsummer saturday is always between june 20-26
+    day = 20
+    while datetime.datetime(year, 6, day).weekday() != 5:
+        day += 1
+    return pytz.timezone(settings.TIME_ZONE).localize(datetime.datetime(year, 6, day))
+
+
 class Header(models.Model):
     title = models.CharField(max_length=255)
     text = models.TextField()
@@ -42,10 +50,7 @@ class Event(models.Model):
         # Midsummer saturday is always between june 20-26
         if not year:
             year = self.year
-        day = 20
-        while datetime.datetime(year, 6, day).weekday() != 5:
-            day += 1
-        return pytz.timezone(settings.TIME_ZONE).localize(datetime.datetime(year, 6, day))
+        return get_midsummer_saturday(year)
 
     def get_voting_deadline(self, year=None):
         sat = self.get_midsummer_saturday(year)
