@@ -4,8 +4,9 @@ from django.db.models.functions import Lower
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views import generic
+from django.utils import timezone
 
-from juhannus.models import Event, Participant
+from juhannus.models import Event, Participant, get_midsummer_saturday
 from juhannus.forms import SubmitForm
 
 
@@ -16,6 +17,13 @@ class EventView(generic.FormView):
     def dispatch(self, request, *args, **kwargs):
         if not Event.objects.exists():
             return HttpResponse("No event in db")
+
+        year = timezone.now().year
+        if timezone.now().strftime("%V") == get_midsummer_saturday(year).strftime("%V"):
+            # Only hit db when the week is correct
+            if not Event.objects.filter(year=year):
+                previous = Event.objects.order_by("year").last()
+                Event.objects.create(year=year, header=previous.header, body=previous.body)
         return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
