@@ -40,7 +40,7 @@ class EventView(generic.FormView):
         else:
             ctx['event'] = get_object_or_404(Event, year=self.kwargs.get("year"))
 
-        ctx["participants"] = ctx["event"].participants.order_by(Lower(sort_order))
+        ctx["participants"] = ctx["event"].participants.order_by(sort_order if sort_order == "vote" else Lower(sort_order))
 
         ctx["ascending"] = False if self.request.GET.get(sort_order, "").lower() == "desc" else True
 
