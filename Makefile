@@ -1,5 +1,6 @@
 .PHONY: build start stop up
 
+BASE_DIR = $(shell pwd)
 CONTAINER_PORT := $(shell grep CONTAINER_PORT .env | cut -d '=' -f2)
 
 build:
@@ -14,4 +15,9 @@ stop:
 	@docker stop juhannus
 
 up:
-	@docker run --env-file=.env -p 127.0.0.1:${CONTAINER_PORT}:${CONTAINER_PORT} -v /opt/juhannus.suomiscene.fi/app:/juhannus/app --name juhannus -d juhannus
+	@docker run \
+	--env-file=.env \
+	-p 127.0.0.1:${CONTAINER_PORT}:${CONTAINER_PORT} \
+	-v ${BASE_DIR}/app:/juhannus/app \
+	--name juhannus \
+	-d juhannus
