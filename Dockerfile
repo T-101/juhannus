@@ -16,10 +16,4 @@ RUN pip install -r requirements.txt
 
 ADD . /juhannus/
 
-EXPOSE 8000
-
-# COPY entry.sh /entry.sh
-
-# CMD ['/entry.sh']
-
-CMD gunicorn config.wsgi --timeout 600 -w 4 -b 0.0.0.0:8000
+CMD ["/bin/sh", "-c", "gunicorn config.wsgi --timeout 600 -w $UWSGI_WORKERS -b 0.0.0.0:$CONTAINER_PORT"]
