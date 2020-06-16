@@ -64,7 +64,8 @@ class Event(models.Model):
 
     def is_voting_available(self, year=None):
         deadline = self.get_voting_deadline(year)
-        return timezone.now() <= deadline
+        # use .localtime() when comparing to pytz-created datetime object
+        return timezone.localtime() <= deadline
 
     def _subst_text(self, text):
         year = re.sub(r'0', "o", str(self.year))  # Replace all zeros with lowercase o's. ASCII art, bitch!
