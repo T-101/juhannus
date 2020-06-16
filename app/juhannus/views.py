@@ -18,8 +18,9 @@ class EventView(generic.FormView):
         if not Event.objects.exists():
             return HttpResponse("No event in db")
 
-        year = timezone.now().year
-        if timezone.now().strftime("%V") == get_midsummer_saturday(year).strftime("%V"):
+        # use .localtime() when comparing to pytz-created datetime object
+        year = timezone.localtime().year
+        if timezone.localtime().strftime("%V") == get_midsummer_saturday(year).strftime("%V"):
             # Only hit db when the week is correct
             if not Event.objects.filter(year=year):
                 previous = Event.objects.order_by("year").last()

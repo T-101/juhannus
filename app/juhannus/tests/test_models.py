@@ -1,3 +1,5 @@
+
+
 from unittest import mock
 
 from django.test import TestCase
@@ -69,4 +71,11 @@ class ModelsTests(TestCase):
             self.assertTrue(event.is_voting_available())
         now_in_future = timezone.now().replace(year=year_in_future, month=1, day=1)
         with mock.patch('juhannus.models.timezone.now', return_value=now_in_future):
+            self.assertFalse(event.is_voting_available())
+
+        # in 2018 Voting deadline was June 21st 23:59:59
+        late_vote = timezone.localtime().replace(year=2018, month=6, day=21, hour=23, minute=59, second=59, microsecond=0)
+        with mock.patch('juhannus.models.timezone.localtime', return_value=late_vote):
+            self.assertTrue(event.is_voting_available())
+        with mock.patch('juhannus.models.timezone.localtime', return_value=late_vote + timezone.timedelta(seconds=1)):
             self.assertFalse(event.is_voting_available())
