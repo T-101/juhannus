@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'django_simple_plausible',
     'juhannus',
     'django.contrib.admin',
 ]
@@ -128,3 +129,7 @@ STATIC_URL = env('STATIC_URL')
 
 MEDIA_URL = env('MEDIA_URL')
 MEDIA_ROOT = env('MEDIA_ROOT')
+
+PLAUSIBLE_SITES = env.str("PLAUSIBLE_SITES")
+PLAUSIBLE_SCRIPT_URL = env.str("PLAUSIBLE_SCRIPT_URL")
+
