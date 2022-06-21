@@ -11,6 +11,14 @@ input {
     font-family: monospace;
 }
 
+#id_handle {
+    width: 15em;
+}
+
+#id_vote {
+    width: 6em;
+}
+
 .tcolumn {
     text-align: center;
     padding: 5px 20px 5px 20px;

@@ -25,10 +25,12 @@ class SubmitForm(forms.ModelForm):
 
         widgets = {
             'name': forms.TextInput(attrs={
+                'id': 'input_handle',
                 'placeholder': ' Handle',
                 'autocomplete': "off",
                 'autofocus': 'autofocus'}),
             'vote': forms.NumberInput(attrs={
+                'id': 'id_vote',
                 'placeholder': ' Vote',
                 'autocomplete': "off",
                 'min': 0,
