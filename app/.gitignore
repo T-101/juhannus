@@ -1,7 +1,6 @@
 .idea/*
 .env
-db.sqlite3
+db.sqlite3*
 *.pyc
 static/*
 media/*
-juhannus/fixtures/juhannus.json
