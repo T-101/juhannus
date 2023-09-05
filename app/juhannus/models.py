@@ -1,12 +1,10 @@
 import re
-import pytz
 import datetime
 
 from string import Template
 
 from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
 from django.db import models
-from django.conf import settings
 from django.utils import timezone
 
 
@@ -15,7 +13,8 @@ def get_midsummer_saturday(year):
     day = 20
     while datetime.datetime(year, 6, day).weekday() != 5:
         day += 1
-    return pytz.timezone(settings.TIME_ZONE).localize(datetime.datetime(year, 6, day))
+    # return pytz.timezone(settings.TIME_ZONE).localize(datetime.datetime(year, 6, day))
+    return timezone.localtime().replace(year=year, month=6, day=day, minute=0, hour=0, second=0, microsecond=0)
 
 
 class Header(models.Model):
@@ -64,7 +63,7 @@ class Event(models.Model):
 
     def is_voting_available(self, year=None):
         deadline = self.get_voting_deadline(year)
-        # use .localtime() when comparing to pytz-created datetime object
+        # use .localtime() when comparing to an aware datetime object
         return timezone.localtime() <= deadline
 
     def _subst_text(self, text):
@@ -85,12 +84,6 @@ class Event(models.Model):
 
     def get_body_text(self):
         return self._subst_text(self.body.text)
-
-    def import_participants(self, name_string):
-        # Reads a string, where newlines are replaced with commas.
-        for item in name_string.split(","):
-            name, vote = re.search(r"(.*)\s(\d+)", item).groups()
-            Participant.objects.create(event=self, name=name.strip(), vote=vote.strip())
 
     def __str__(self):
         return f"Midsummer {self.year}"
