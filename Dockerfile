@@ -1,19 +1,15 @@
-FROM python:3.7-alpine3.9
+FROM python:3.11-alpine3.17
 
 ENV PYTHONUNBUFFERED 1
 
-RUN mkdir /juhannus
+WORKDIR /app/app
 
-WORKDIR /juhannus/app/
+RUN apk add nano bash
+ENV TZ=Europe/Helsinki
 
-RUN apk add nano tzdata
-RUN cp /usr/share/zoneinfo/Europe/Helsinki /etc/localtime
-RUN echo "Europe/Helsinki" > /etc/timezone
+RUN pip install --upgrade pip
 
-ADD app/requirements.txt /juhannus/app/
+COPY app/requirements.txt /app/app/
 
-RUN pip install -r requirements.txt
+RUN pip install -r /app/app/requirements.txt
 
-ADD . /juhannus/
-
-CMD ["/bin/sh", "-c", "gunicorn config.wsgi --timeout 600 -w $UWSGI_WORKERS -b 0.0.0.0:$CONTAINER_PORT"]

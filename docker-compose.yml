@@ -1,13 +1,16 @@
 version: '3'
 
 services:
-  juhannus:
+  app:
     env_file:
       - .env
     build: .
-    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:${CONTAINER_PORT}"
+    # Uncomment which one is necessary
+    # command: bash -c "python manage.py runserver 0.0.0.0:${CONTAINER_PORT}"
+    # command: bash -c "gunicorn config.wsgi -w ${UWSGI_WORKERS} -b 0.0.0.0:${CONTAINER_PORT}"
     container_name: juhannus
     volumes:
-      - .:/juhannus
+      - .:/app
     ports:
-      - "${CONTAINER_PORT}:${CONTAINER_PORT}"
+      - "127.0.0.1:${CONTAINER_PORT}:${CONTAINER_PORT}"
+    restart: "unless-stopped"

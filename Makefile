@@ -1,23 +1,13 @@
-.PHONY: build start stop up
+.PHONY: build up
 
 BASE_DIR = $(shell pwd)
 CONTAINER_PORT := $(shell grep CONTAINER_PORT .env | cut -d '=' -f2)
 
 build:
-	@docker-compose build
-	@docker-compose run juhannus python ./manage.py collectstatic --no-input
-	@docker build -t juhannus .
-
-start:
-	@docker start juhannus
-
-stop:
-	@docker stop juhannus
+	@docker compose build
+	@docker compose run --rm app python manage.py makemigrations
+	@docker compose run --rm app python manage.py migrate
+	@docker compose run --rm app python ./manage.py collectstatic --no-input
 
 up:
-	@docker run \
-	--env-file=.env \
-	-p 127.0.0.1:${CONTAINER_PORT}:${CONTAINER_PORT} \
-	-v ${BASE_DIR}/app:/juhannus/app \
-	--name juhannus \
-	-d juhannus
+	@docker compose up
