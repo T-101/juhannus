@@ -1,7 +1,7 @@
 import re
 
 from django.db.models.functions import Lower
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.views import generic
 from django.utils import timezone
@@ -14,9 +14,13 @@ class EventView(generic.FormView):
     template_name = 'juhannus/index.html'
     form_class = SubmitForm
 
+    def __init__(self):
+        super().__init__()
+        self.events = Event.objects.select_related("body", "header").order_by("year")
+
     def dispatch(self, request, *args, **kwargs):
-        if not Event.objects.exists():
-            return HttpResponse("No event in db")
+        if not self.events:
+            return HttpResponse("No events in db")
 
         # use .localtime() when comparing to pytz-created datetime object
         year = timezone.localtime().year
@@ -32,16 +36,20 @@ class EventView(generic.FormView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx["events"] = list(Event.objects.order_by("year").values("year"))
+        ctx["events"] = self.events
 
         sort_order = "vote" if self.request.GET.get("vote") else "name"
 
         if not self.kwargs.get("year"):
-            ctx['event'] = Event.objects.order_by("year").last()
+            ctx['event'] = self.events.order_by("year").last()
         else:
-            ctx['event'] = get_object_or_404(Event, year=self.kwargs.get("year"))
+            try:
+                ctx["event"] = self.events.get(year=self.kwargs.get("year"))
+            except Event.DoesNotExist:
+                raise Http404
 
-        ctx["participants"] = ctx["event"].participants.order_by(sort_order if sort_order == "vote" else Lower(sort_order))
+        ctx["participants"] = ctx["event"].participants.order_by(
+            sort_order if sort_order == "vote" else Lower(sort_order))
 
         ctx["ascending"] = False if self.request.GET.get(sort_order, "").lower() == "desc" else True
 
@@ -50,7 +58,6 @@ class EventView(generic.FormView):
         return ctx
 
     def form_valid(self, form):
-        # print("FORM VALID", form.data.get("action"))
         action = form.data.get("action")
         if action == "modify" and self.request.user.is_staff:
             instance = get_object_or_404(Participant, pk=form.data.get("pk"))
@@ -64,7 +71,3 @@ class EventView(generic.FormView):
             if vote.event.is_voting_available() or self.request.user.is_staff:
                 vote.save()
         return super().form_valid(form)
-
-    def form_invalid(self, form):
-        # print("FORM INVALID", form.errors)
-        return super().form_invalid(form)

@@ -39,10 +39,10 @@ class ModelsTests(TestCase):
 
     def test_get_participants(self):
         event = self.midsummer2018
-        self.assertEqual(len(event.get_participants()), 1)
-        self.assertEqual(event.get_participants().first().vote, 6)
+        self.assertEqual(len(event.participants.all()), 1)
+        self.assertEqual(event.participants.first().vote, 6)
         event = self.midsummer2020
-        self.assertEqual(len(event.get_participants()), 0)
+        self.assertEqual(len(event.participants.all()), 0)
 
     def test_get_saturday(self):
         event = self.midsummer2018

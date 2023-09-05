@@ -5,7 +5,7 @@
 
     <pre>{{ event.get_body_text|safe }}</pre>
 
-    {% if event.get_participants %}
+    {% if event.participants %}
         <table>
             <tr>
                 {% if ascending %}
@@ -56,7 +56,7 @@
         </table>
         <p>
             <code>
-                Osallistujia: {{ event.get_participants|length }}
+                Osallistujia: {{ event.participants.count }}
             </code>
         </p>
     {% endif %}

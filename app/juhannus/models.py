@@ -42,9 +42,6 @@ class Event(models.Model):
     result = models.PositiveIntegerField(blank=True, null=True)
     is_final = models.BooleanField(default=False)
 
-    def get_participants(self):
-        return self.participants.filter(visible=True)
-
     def get_midsummer_saturday(self, year=None):
         # Midsummer saturday is always between june 20-26
         if not year:

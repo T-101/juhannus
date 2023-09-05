@@ -12,7 +12,7 @@ class SubmitForm(forms.ModelForm):
 
         name = self.cleaned_data.get("name")
         event = self.cleaned_data.get("event")
-        if event.get_participants().filter(name__iexact=name.strip()) and action != "modify":
+        if event.participants.filter(name__iexact=name.strip()) and action != "modify":
             raise forms.ValidationError({"name": "Name already in use. Choose another"})
 
     class Meta:
