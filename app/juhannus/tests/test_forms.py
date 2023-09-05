@@ -5,7 +5,7 @@ from juhannus.models import Participant
 
 
 class FormsTests(TestCase):
-    fixtures = ["juhannus/tests/juhannus.json"]
+    fixtures = ["test_juhannus_events.json"]
 
     def test_form_invalid(self):
         form = SubmitForm()
