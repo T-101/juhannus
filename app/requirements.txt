@@ -4,4 +4,4 @@ django-environ==0.11.2
 django-extensions==3.2.3
 django-simple-plausible==0.0.4
 gunicorn==21.2.0
-ipython==8.15.0
+ipython==8.17.2
