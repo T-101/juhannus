@@ -5,6 +5,7 @@
 body {
     font-family: monospace;
     margin-left: 20px;
+    padding-bottom: 2em;
 }
 
 input {
