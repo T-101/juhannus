@@ -1,22 +1,31 @@
-import re
+import json
 
+from django.db.models import Count
 from django.db.models.functions import Lower
 from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.views import generic
 from django.utils import timezone
+from django.views.generic.base import ContextMixin
 
 from juhannus.models import Event, Participant, get_midsummer_saturday
 from juhannus.forms import SubmitForm
 
 
-class EventView(generic.FormView):
-    template_name = 'juhannus/index.html'
-    form_class = SubmitForm
-
+class BaseEventView(ContextMixin):
     def __init__(self):
         super().__init__()
         self.events = Event.objects.select_related("body", "header").order_by("year")
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["events"] = self.events
+        return ctx
+
+
+class EventView(BaseEventView, generic.FormView):
+    template_name = 'juhannus/index.html'
+    form_class = SubmitForm
 
     def dispatch(self, request, *args, **kwargs):
         if not self.events:
@@ -36,7 +45,6 @@ class EventView(generic.FormView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx["events"] = self.events
 
         sort_order = "vote" if self.request.GET.get("vote") else "name"
 
@@ -71,3 +79,17 @@ class EventView(generic.FormView):
             if vote.event.is_voting_available() or self.request.user.is_staff:
                 vote.save()
         return super().form_valid(form)
+
+
+class StatsView(BaseEventView, generic.TemplateView):
+    template_name = 'juhannus/stats.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        participants = (Participant.objects
+                        .annotate(lname=Lower("name"))
+                        .values("lname")
+                        .annotate(count=Count("lname"))
+                        .order_by("-count", "lname"))
+        ctx["participants_json"] = json.dumps(list(participants))
+        return ctx
