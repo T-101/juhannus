@@ -13,6 +13,7 @@
         {% for event in events %}
             <a href="{% url 'juhannus:event-detail' event.year %}">{{ event.year }}</a>
         {% endfor %}
+    <a href="{% url 'juhannus:event-stats' %}">Statseja</a>
     </div>
     <div class="col pull-right">
         <a href="https://github.com/T-101/juhannus">Github</a>

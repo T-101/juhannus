@@ -1,0 +1,36 @@
+{% extends 'juhannus/base.html' %}
+{% block content %}
+    <h3>Statseja</h3>
+
+    <h4>Osallistumiset</h4>
+
+    <table id="participant-table">
+        <tr>
+            <th>Nimi</th>
+            <th>lkm</th>
+        </tr>
+    </table>
+
+    <template id="participants">
+        <tr id="participant-row">
+            <td id="participant-name" class="tcolumn-narrow"></td>
+            <td id="participant-count" class="tcolumn-narrow"></td>
+        </tr>
+    </template>
+
+    <script>
+        const participants = JSON.parse('{{ participants_json|safe }}')
+        let last_count = null
+        participants.forEach(participant => {
+            const template = document.getElementById('participants').content.cloneNode(true)
+            template.querySelector('#participant-name').textContent = participant.lname
+            template.querySelector('#participant-count').textContent = participant.count
+            if (last_count !== participant.count) {
+                template.querySelector('#participant-row').style.cssText = 'height: 2.5em; vertical-align: bottom;'
+                last_count = participant.count
+            }
+            document.getElementById('participant-table').appendChild(template)
+        })
+    </script>
+
+{% endblock %}

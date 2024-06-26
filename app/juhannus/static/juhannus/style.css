@@ -25,6 +25,11 @@ input {
     padding: 5px 20px 5px 20px;
 }
 
+.tcolumn-narrow {
+    text-align: center;
+    padding: 0;
+}
+
 .formwrapper {
     margin-top: 20px;
     margin-bottom: 20px;
