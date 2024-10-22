@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import sys
+
 import environ
 
 from django.conf import settings
@@ -71,6 +73,8 @@ if DEBUG:
         if item == "django.contrib.staticfiles":
             INSTALLED_APPS.insert(i + 1, "debug_toolbar")
             break
+
+DEBUG_TOOLBAR_CONFIG['IS_RUNNING_TESTS'] = 'test' not in sys.argv  # I don't like this, but was unable to get it to work otherwise
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
