@@ -1,6 +1,6 @@
 import json
 
-from django.db.models import Count
+from django.db.models import Count, F
 from django.db.models.functions import Lower
 from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404
@@ -91,5 +91,13 @@ class StatsView(BaseEventView, generic.TemplateView):
                         .values("lname")
                         .annotate(count=Count("lname"))
                         .order_by("-count", "lname"))
+        highscores = (Participant.objects
+                      .filter(event__is_final=True, event__result__isnull=False, vote=F("event__result"))
+                      .annotate(lname=Lower("name"))
+                      .values("lname")
+                      .annotate(count=Count("id"))
+                      .order_by("-count", "lname"))
+
         ctx["participants_json"] = json.dumps(list(participants))
+        ctx["highscores_json"] = json.dumps(list(highscores))
         return ctx
