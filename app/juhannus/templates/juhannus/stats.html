@@ -31,28 +31,49 @@
         }
 
     </script>
+    <style>
+        .row {
+            display: flex;
+        }
+
+        .column {
+            flex: 50%;
+            text-align: center;
+        }
+
+        table {
+            margin: 0 auto;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
     <h3>Statseja</h3>
 
-    <h4>Voittajat</h4>
+    <div class="center">
+        <div class="row">
+            <div class="column">
+                <h4>Voittajat</h4>
 
-    <table id="highscore-table">
-        <tr>
-            <th>Nimi</th>
-            <th>lkm</th>
-        </tr>
-    </table>
+                <table id="highscore-table">
+                    <tr>
+                        <th>Nimi</th>
+                        <th>lkm</th>
+                    </tr>
+                </table>
+            </div>
+            <div class="column">
+                <h4>Osallistumiset</h4>
 
-    <h4>Osallistumiset</h4>
-
-    <table id="participant-table">
-        <tr>
-            <th>Nimi</th>
-            <th>lkm</th>
-        </tr>
-    </table>
+                <table id="participant-table">
+                    <tr>
+                        <th>Nimi</th>
+                        <th>lkm</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
 
     <template id="participants">
         <tr id="participant-row">
