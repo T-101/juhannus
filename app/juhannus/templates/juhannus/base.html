@@ -1,4 +1,4 @@
-<!DOCTYPE html>{% load static %}{% load plausible %}
+<!DOCTYPE html>{% load django_analytics_tags %}
 <html lang="fi">
 <head>
     <meta charset="UTF-8">
@@ -27,7 +27,7 @@
 {% block htmlform %}
 {% endblock %}
 
-{% plausible %}
+{% django_analytics_tags %}
 
 </body>
 </html>

@@ -60,7 +60,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # packages
     'django_extensions',
-    'django_simple_plausible',
+    'django_analytics_tags',
     # apps
     'juhannus',
     # there was a reason why this gets loaded last, but I cannot remember why
@@ -160,5 +160,8 @@ STATIC_URL = env('STATIC_URL')
 MEDIA_URL = env('MEDIA_URL')
 MEDIA_ROOT = env('MEDIA_ROOT')
 
-PLAUSIBLE_SITES = env.str("PLAUSIBLE_SITES", None)
-PLAUSIBLE_SCRIPT_URL = env.str("PLAUSIBLE_SCRIPT_URL", None)
+ANALYTICS = {
+    "PROVIDER": env.str("ANALYTICS_PROVIDER", ""),
+    "DOMAIN_ID": env.str("ANALYTICS_DOMAIN_ID", ""),
+    "SCRIPT_URL": env.str("ANALYTICS_SCRIPT_URL", ""),
+}
